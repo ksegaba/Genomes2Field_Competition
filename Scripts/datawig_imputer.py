@@ -135,7 +135,7 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Silk_DAP_days"] = predictions["Silk_DAP_days_imputed"].round()
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False) # save df1_imp_wea_soil with imputed column
 
     # Delete datasets to clear up memory
     del df1_imp_wea_soil
@@ -190,7 +190,7 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Pollen_DAP_days"] = predictions["Pollen_DAP_days_imputed"] # replace missing values with predictions
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False) # save df1_imp_wea_soil with imputed column
 
     ###########################################################################
     # Impute Plant_Height_cm
@@ -243,7 +243,7 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Plant_Height_cm"] = predictions["Plant_Height_cm_imputed"] # replace missing values with predictions
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False) # save df1_imp_wea_soil with imputed column
     
     ############################################################################
     # Impute Ear_Height_cm
@@ -308,7 +308,7 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Ear_Height_cm"] = predictions["Ear_Height_cm"] # replace missing values with predictions
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv")
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False)
 
     ############################################################################
     # Impute Root_Lodging_plants
@@ -441,7 +441,7 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Grain_Moisture"] = predictions["Grain_Moisture_imputed"].round()
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False) # save df1_imp_wea_soil with imputed column
 
     ############################################################################
     # Impute Twt_kg_m3
@@ -500,7 +500,7 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Twt_kg_m3"] = predictions["Twt_kg_m3_imputed"].round()
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False) # save df1_imp_wea_soil with imputed column
 
     ############################################################################
     # Impute Yield_Mg_ha
@@ -563,13 +563,13 @@ if __name__ == "__main__":
     imputer.save() # save model
     test["Yield_Mg_ha"] = predictions["Yield_Mg_ha_imputed"].round()
     df1_iws_imputed = pd.concat([train, test])
-    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
+    df1_iws_imputed.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False) # save df1_imp_wea_soil with imputed column
 
     # Drop columns with low imputation accuracy
     df1_imp_wea_soil.drop(["Root_Lodging_plants", "Stalk_Lodging_plants"], axis=1)
     df1_imp_wea_soil.to_csv("Merged_Trait_Weather_Soil_Data_imputed.csv") # save df1_imp_wea_soil with imputed column
 
     # Check missing data in final dataset
-    df1_imp_wea_soil = pd.read_csv("Merged_Trait_Weather_Soil_Data_imputed.csv")
+    df1_imp_wea_soil = pd.read_csv("Merged_Trait_Weather_Soil_Data_imputed.csv", index=False)
     print(df1_imp_wea_soil.iloc[:,0:20].isna().sum())
     
