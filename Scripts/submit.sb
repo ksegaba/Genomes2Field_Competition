@@ -16,8 +16,8 @@ python Scripts/datawig_imputer.py
 # Run dimension reduction on genotype data
 data=(BEAGLE LinkImpute)
 path=/mnt/home/seguraab/Shiu_Lab/Collabs/Maize_GxE_Competition_Data/Training_Data
-file=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_${data[$_SLURM_ARRAY_TASK_ID]}_imputed.plink.raw
-save=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_${data[$_SLURM_ARRAY_TASK_ID]}_imputed
+file=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_${data[${SLURM_ARRAY_TASK_ID}]}_imputed.plink.raw
+save=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_${data[${SLURM_ARRAY_TASK_ID}]}_imputed
 python Scripts/dimension_reduction.py -path $path -file $file -save $save -t n
 
 scontrol show job $SLURM_JOB_ID
