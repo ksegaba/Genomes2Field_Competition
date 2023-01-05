@@ -15,6 +15,18 @@ module load GCC/10.2.0  OpenMPI/4.0.5  R/4.0.3
 
 env=($(<env_list.txt))
 
+## Upsampling using SMOTE
+# source: https://github.com/peipeiwang6/pCRE_identification/blob/main/09_apply_model_to_new_data_draw_two_AUC_SMOTE_on_test_prediction_score.py
+# smote: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html
+<command to run script>
+
+## Generate cross-validation scheme (cvs) file using Peipei's code
+# source: https://github.com/peipeiwang6/Genomic_prediction_in_Switchgrass
+# module purge
+# module load GCC/6.4.0-2.28  OpenMPI/2.1.2  Python/3.6.4
+# python 07_make_CVs.py -file pheno.csv -cv 10 -number 10
+
+
 ### Baseline models
 # BEAGLE
 X=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_BEAGLE_imputed_-101encoding.csv
