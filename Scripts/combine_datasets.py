@@ -32,3 +32,21 @@ if __name__ == "__main__":
     all = all.join(weather, on="Env", how="outer", rsuffix="_weather")
 
     # Combine all and ec
+    # Note: the ec data has a lot of dates, we may only need a few of them so will need to be filtered
+    # or if there is some way to generate features from the dates too, else, we can keep them all.
+    # What do you think?
+    ec.set_index("Env", inplace=True)
+    all = all.join(ec, on="Env", how="outer", rsuffix="_ec")
+
+    # Generate submatrices for each Env
+    for grp in all["Env"].unique():
+        sub = all[all["Env"]==grp]
+
+        # Calculate correlation matrix of each matrix
+        # Note: These heatmaps will help us see which variables are not correlated
+        # with yield. We can discuss which variables we want to drop based on this.
+        sub_num = sub.select_dtypes(include=["float64"])
+        sub_num_cor = sub_num.corr(method="spearman")
+        fig, ax = plt.subplots(figsize=(40,40))
+        sns.heatmap(sub_num_cor, ax=ax, annot=True)
+        plt.savefig(f"1-6_{grp}_spearman_heatmap.pdf")
