@@ -1,0 +1,16 @@
+{
+    "learning_rate": 0.000275,
+    "batch_size": 100,
+    "noise_std": 0.005,
+    "n_samples": -1,
+    "loss": {
+      "module": "tf.keras.losses",
+      "class": "MeanSquaredError"
+    },
+    "regularizer": {
+      "reg_factor": 5e-08,
+      "module": "tf.keras.regularizers",
+      "class": "l2"
+    }
+  
+  }

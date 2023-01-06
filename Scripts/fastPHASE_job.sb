@@ -1,0 +1,37 @@
+#!/bin/bash --login
+#SBATCH --array=1-10
+#SBATCH --time=150:00:00
+#SBATCH --nodes=1
+#SBATCH --ntasks=2
+#SBATCH --cpus-per-task=4
+#SBATCH --mem-per-cpu=20G
+#SBATCH --job-name fastphase
+#SBATCH --output=%x_%j.out
+
+cd /mnt/home/seguraab/Shiu_Lab/Collabs/Maize_GxE_Competition_Data/Training_Data
+
+### ON THE COMMAND LINE
+# Convert VCF to PLINK format
+# module load GNU/7.3.0-2.30  OpenMPI/3.1.1-CUDA  VCFtools/0.1.15-Perl-5.28.0
+# vcftools --vcf 5_Genotype_Data_All_Years.vcf --plink --out 5_Genotype_Data_All_Years.plink
+
+# Convert PLINK to fastPHASE format
+# module load PLINK/1.9b_4.1-x86_64
+# plink --file 5_Genotype_Data_All_Years.plink --recode12 fastphase --out 5_Genotype_Data_All_Years.fastphase
+
+### ON SLURM
+# fastPHASE imputation by chromosome
+pipe=/mnt/home/seguraab/Shiu_Lab/Project/External_software
+${pipe}/fastPHASE -T10 -H-4 -o5_Genotype_Data_All_Years_fastphase.chr-${SLURM_ARRAY_TASK_ID} 5_Genotype_Data_All_Years.fastphase.chr-${SLURM_ARRAY_TASK_ID}.recode.phase.inp
+
+# Convert fastPHASE genotypes to matrix format
+# path=/mnt/home/seguraab/Shiu_Lab/Project/Scripts/Data_Processing
+# file=5_Genotype_Data_All_Years_fastphase.chr-${}_genotypes.out
+# map=5_Genotype_Data_All_Years.plink.map
+# save=5_Genotype_Data_All_Years_fastphase.chr-${}_genotypes.csv
+# python ${path}/fastPHASE_to_csv.py -path $path -file $file -map $map -save $save
+
+# Combine the matrices
+
+
+scontrol show job $SLURM_JOB_ID

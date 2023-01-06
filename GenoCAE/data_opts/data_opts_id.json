@@ -1,0 +1,6 @@
+{ "norm_mode" : "genotypewise01",
+  "norm_opts" : {"flip": false, "missing_val":0.0},
+  "impute_missing" : false,
+  "validation_split" : 0.2,
+  "sparsifies" : [0.0, 0.1, 0.2, 0.3, 0.4]
+}
