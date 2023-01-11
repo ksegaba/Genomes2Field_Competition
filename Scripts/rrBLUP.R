@@ -1,5 +1,3 @@
-# Author: Peipei Wang
-# Modified by: Kenia Segura Abá
 library(rrBLUP)
 library(data.table)
 set.seed(42)
@@ -13,6 +11,17 @@ cv <- as.numeric(args[6]) # the fold number of the cross-validation scheme
 number <- as.numeric(args[7]) # how many times your want to repeat the cross-validation scheme
 cvs_file <- args[8] # the CVs file
 save_name <- args[9]
+
+# Arguments for debugging
+# X_file <- "/mnt/home/seguraab/Shiu_Lab/Project/Data/Peter_2018/geno.csv"
+# Y_file <- "/mnt/home/seguraab/Shiu_Lab/Project/Data/Peter_2018/pheno.csv"
+# feat_file <- "/mnt/scratch/seguraab/yeast_project/yeast_rf_results/feat_exp_rf_YPDCAFEIN40_top_512"
+# trait <- "YPDCAFEIN40"
+# test_file <- "/mnt/home/seguraab/Shiu_Lab/Project/Data/Peter_2018/Test.txt"
+# cv <- 5
+# number <- 10
+# cvs_file <- "/mnt/home/seguraab/Shiu_Lab/Project/Data/Peter_2018/CVFs.csv"
+# save_name <- "rrBLUP_geno_feat_exp_rf_YPDCAFEIN40_top_512"
 
 
 Y <- read.csv(Y_file, row.names=1) 
