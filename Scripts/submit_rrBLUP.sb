@@ -1,91 +1,39 @@
 #!/bin/bash --login
-#SBATCH --array=0-7 #  the number of years
-#SBATCH --time=16:00:00 #10:00:00 
+#SBATCH --array=0-150
+#SBATCH --time=16:00:00
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
 #SBATCH --cpus-per-task=1
-#SBATCH --mem-per-cpu=10G
-#SBATCH --job-name rrblup
+#SBATCH --mem-per-cpu=300G
+#SBATCH --job-name rrblup_env_beagle #rrblup_env_linkimp
 #SBATCH --output=%x_%j.out
 
-cd /mnt/home/seguraab/Shiu_Lab/Collabs/Maize_GxE_Competition_Data/Training_Data
+cd /mnt/gs21/scratch/seguraab/AIMaize
 
 module purge 
 module load GCC/10.2.0  OpenMPI/4.0.5  R/4.0.3
 
-## Upsampling using SMOTE
-# source: https://github.com/peipeiwang6/pCRE_identification/blob/main/09_apply_model_to_new_data_draw_two_AUC_SMOTE_on_test_prediction_score.py
-# smote: https://imbalanced-learn.org/stable/references/generated/imblearn.over_sampling.SMOTE.html
-<command to run script>
+pipe=/mnt/home/seguraab/Shiu_Lab/Collabs/Maize_GxE_Competition_Data/Scripts
 
-###################### Predict yield for each year
-years=($(<year_list.txt))
+###################### Predict yield for each environment
+envs=($(<env_list.txt))
+# BEAGLE haplotype
+X=beagle_hap/haplotype_BEAGLE_${envs[${SLURM_ARRAY_TASK_ID}]}
+y=pheno_hap_${envs[${SLURM_ARRAY_TASK_ID}]}
+type=BEAGLE
+env=${envs[${SLURM_ARRAY_TASK_ID}]}
+dir=/mnt/gs21/scratch/seguraab/AIMaize/
+path=0_rrBLUP_results/
+Rscript ${pipe}/rrblup_fs.R $X $y $type $env $dir $path
 
-## Generate cross-validation scheme (cvs) file using Peipei's code
-# source: https://github.com/peipeiwang6/Genomic_prediction_in_Switchgrass
-# module purge
-# module load GCC/6.4.0-2.28  OpenMPI/2.1.2  Python/3.6.4
-# python 07_make_CVs.py -file pheno.csv -cv 10 -number 10
-
-
-### Baseline models
-# BEAGLE
-X=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_BEAGLE_imputed_-101encoding.csv
-Y=pheno_${years[${SLURM_ARRAY_TASK_ID}]}.csv
-feat=all
-trait=Yield_Mg_ha
-test=../Testing_Data/Test.txt
-cv=10
-number=10
-cvs=cvs_${years[${SLURM_ARRAY_TASK_ID}]}.csv # apply smote to get cvs scheme first (get based on 'Hybrid' only for each env, so 217 files???? bc not all envs have the same hybrids)
-save=rrblup_BEAGLE
-Rscript ../Scripts/rrBLUP.R $X $Y $feat $trait $test $cv $number $cvs $save
-
-# LinkImpute
-X=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_LinkImpute_imputed_-101encoding.csv
-Y=pheno_${years[${SLURM_ARRAY_TASK_ID}]}.csv
-feat=all
-trait=Yield_Mg_ha
-test=Test.txt
-cv=10
-number=10
-cvs=cvs_${years[${SLURM_ARRAY_TASK_ID}]}.csv # apply smote to get cvs scheme first (get based on 'Hybrid' only for each env, so 217 files???? bc not all envs have the same hybrids)
-save=rrblup_BEAGLE
-Rscript ../Scripts/rrBLUP.R $X $Y $feat $trait $test $cv $number $cvs $save
-
-###################### Predict low, mid, high yield
-## Generate pheno_{yield category}.csv files for low, mid, and high yield
-<command to run code>
-level = (low mid high)
-
-## Generate cross-validation scheme (cvs) file using Peipei's code
-# source: https://github.com/peipeiwang6/Genomic_prediction_in_Switchgrass
-# module purge
-# module load GCC/6.4.0-2.28  OpenMPI/2.1.2  Python/3.6.4
-# python 07_make_CVs.py -file pheno.csv -cv 10 -number 10
+# LinkImpute haplotype
+# X=linkimpute_hap/haplotype_LinkImpute_${envs[${SLURM_ARRAY_TASK_ID}]}
+# y=pheno_hap_${envs[${SLURM_ARRAY_TASK_ID}]}
+# type=LinkImpute
+# env=${envs[${SLURM_ARRAY_TASK_ID}]}
+# dir=/mnt/gs21/scratch/seguraab/AIMaize/
+# path=0_rrBLUP_results/
+# Rscript ${pipe}/rrblup_fs.R $X $y $type $env $dir $path
 
 
-### Baseline models
-# BEAGLE
-X=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_BEAGLE_imputed_-101encoding.csv
-Y=pheno_${level[${SLURM_ARRAY_TASK_ID}]}.csv
-feat=all
-trait=Yield_Mg_ha
-test=../Testing_Data/Test.txt
-cv=10
-number=10
-cvs=cvs_${level[${SLURM_ARRAY_TASK_ID}]}.csv # apply smote to get cvs scheme first (get based on 'Hybrid' only for each env, so 217 files???? bc not all envs have the same hybrids)
-save=rrblup_BEAGLE
-Rscript ../Scripts/rrBLUP.R $X $Y $feat $trait $test $cv $number $cvs $save
-
-# LinkImpute
-X=5_Genotype_Data_All_Years_maf005_maxmiss090_cleaned_LinkImpute_imputed_-101encoding.csv
-Y=pheno_${level[${SLURM_ARRAY_TASK_ID}]}.csv
-feat=all
-trait=Yield_Mg_ha
-test=Test.txt
-cv=10
-number=10
-cvs=cvs_${level[${SLURM_ARRAY_TASK_ID}]}.csv # apply smote to get cvs scheme first (get based on 'Hybrid' only for each env, so 217 files???? bc not all envs have the same hybrids)
-save=rrblup_BEAGLE
-Rscript ../Scripts/rrBLUP.R $X $Y $feat $trait $test $cv $number $cvs $save
+scontrol show job $SLURM_JOB_ID
